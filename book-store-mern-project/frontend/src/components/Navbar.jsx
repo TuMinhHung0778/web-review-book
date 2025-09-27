@@ -1,4 +1,4 @@
-import { href, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { HiBars3CenterLeft, HiOutlineShoppingCart } from "react-icons/hi2";
 import { IoSearchOutline } from "react-icons/io5";
 import { HiOutlineUser } from "react-icons/hi";
@@ -15,10 +15,10 @@ const navigation = [
 ];
 
 const Navbar = () => {
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const currentUser = true;
+
   return (
     <header className="max-w-screen-2xl mx-auto px-4 py-6">
       <nav className="flex justify-between items-center">
@@ -45,6 +45,7 @@ const Navbar = () => {
           <div>
             {currentUser ? (
               <>
+                {/* Nếu currentUser === true → hiện avatar + dropdown */}
                 <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                   <img
                     src={avatarImg}
@@ -54,26 +55,30 @@ const Navbar = () => {
                     }`}
                   />
                 </button>
-                {/* show dropdowns */}
-                {
-                  isDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-40">
-                      <ul className="py-2">
-                        {
-                          navigation.map((item) => (
-                            <li key={item.name} onClick={() => setIsDropdownOpen(false)}>
-                              <Link to={item.href} className="block px-4 py-2 text-smhover:bg-gray-100">
-                              {item.name}
-                              </Link>
-                            </li>
-                          ))
-                        }
-                      </ul>
-                    </div>
-                  )
-                }
+
+                {/* Nếu click avatar → mở menu dropdown */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-40">
+                    <ul className="py-2">
+                      {navigation.map((item) => (
+                        <li
+                          key={item.name}
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          <Link
+                            to={item.href}
+                            className="block px-4 py-2 text-smhover:bg-gray-100"
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </>
             ) : (
+              // Nếu currentUser === false → hiện icon user để login
               <Link to="/login">
                 <HiOutlineUser className="size-6" />
               </Link>
