@@ -21,13 +21,23 @@ const bookSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    oldPrice: Number,
-    newPric: Number,
+    oldPrice: {
+        type: String,
+        required: true,
+    },
+    newPrice: {
+        type: String,
+        required: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now
     }
 
-},{
+}, {
     timestamps: true
 });
+
+const Book = mongoose.model('Book', bookSchema);
+
+module.exports = Book;
