@@ -11,7 +11,7 @@ const cartSlice = createSlice({
     reducers: {
         // thêm sản phẩm vào giỏ hàng
         addToCart: (state, action) => {
-            const existingItem = state.cartItems.find(item => item.id === action.payload.id);
+            const existingItem = state.cartItems.find(item => item._id === action.payload._id);
             if (!existingItem) {
                 state.cartItems.push(action.payload);
                 Swal.fire({
@@ -33,9 +33,9 @@ const cartSlice = createSlice({
                 })
             }
         },
-        // xóa sản phẩm khỏi giỏ hàng
+        // xóa 1 sản phẩm khỏi giỏ hàng
         removeFromCart: (state, action) => {
-            state.cartItems = state.cartItems.filter(item => item.id !== action.payload.id);
+            state.cartItems = state.cartItems.filter(item => item._id !== action.payload._id);
         },
         // xóa tất cả sản phẩm khỏi giỏ hàng
         clearCart: (state) => {
