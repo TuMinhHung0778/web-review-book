@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const CheckoutPage = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = cartItems
-    .reduce((acc, item) => acc + item.newPrice, 0)
+    .reduce((acc, item) => Number(acc + item.newPrice), 0)
     .toFixed(2);
 
   const currentUser = true; // TODO : get user from auth
@@ -19,7 +19,6 @@ const CheckoutPage = () => {
 
   const [isChecked, setIsChecked] = useState(false);
   const onSubmit = (data) => {
-    
     const newOrder = {
       name: data.name,
       email: currentUser?.email,

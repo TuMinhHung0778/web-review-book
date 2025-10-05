@@ -9,18 +9,18 @@ require('dotenv').config()
 // middleware
 app.use(express.json());
 app.use(cors({
-    origin: ["http://localhost:5173/"],
+    origin: ["http://localhost:5173"],
     credentials: true
 }));
 
 // routes
-const bookRoute = require('./src/books/book.route');
-app.use("/api/books", bookRoute);
+const bookRoutes = require('./src/books/book.route');
+app.use("/api/books", bookRoutes);
 
 
 async function main() {
     await mongoose.connect(process.env.DB_URL);
-    app.get('/', (req, res) => {
+    app.get("/", (req, res) => {
         res.send('Book Store Server is running!')
     })
 }
