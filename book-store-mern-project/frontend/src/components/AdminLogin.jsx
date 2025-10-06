@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+
+import axios from "axios";
+import getBaseUrl from "../utils/baseURL";
+import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
   const [message, setMessage] = useState(""); // cảnh báo lỗi khi đăng nhập
@@ -12,17 +15,41 @@ const AdminLogin = () => {
     formState: { errors },
   } = useForm();
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      //   navigate("/");
+      const response = await axios.post(
+        `${getBaseUrl()}/api/auth/admin`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const auth = response.data;
+      console.log(auth);
+      if (auth.token) {
+        localStorage.setItem("token", auth.token);
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          alert("Token has been expired!, Please login again.");
+          navigate("/");
+        }, 3600 * 1000);
+      }
+
+      alert("Admin Login succesfully!");
+      navigate("/dashboard");
+
     } catch (error) {
       setMessage("Please provide a valid email and password");
       console.error(error);
     }
   };
   return (
-    <div className="h-[calc(100vh-120px)] flex justify-center items-center">
+    <div className="h-screen flex justify-center items-center">
       <div className="w-full max-w-sm mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-xl font-semibold mb-4">Admin Dashboard Login</h2>
 
