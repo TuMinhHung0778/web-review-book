@@ -7,6 +7,7 @@ import CartPage from "../pages/books/CartPage";
 import CheckoutPage from "../pages/books/CheckoutPage";
 import SingleBook from "../pages/books/SingleBook";
 import PrivateRoute from "./PrivateRoute";
+import OrderPage from "../pages/books/OrderPage";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/orders",
-        element: <div>Trang Orders day ne</div>,
+        element: (
+          <PrivateRoute>
+            <OrderPage />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/about",
@@ -49,6 +54,28 @@ const router = createBrowserRouter([
         path: "/books/:id",
         element: <SingleBook />,
       },
+      {
+        path: "/dashboard",
+        element: <div>Dashboard ne</div>,
+        children:[
+          {
+            path: "",
+            element: <div>Dashboard Home</div>
+          },
+          {
+            path: "add-new-book",
+            element: <div>Add New Book</div>
+          },
+          {
+            path: "edit-book/:id",
+            element: <div>Edit Book</div>
+          },
+          {
+            path: "mangage-books",
+            element: <div>Manage Books</div>
+          },
+        ]
+      }
     ],
   },
 ]);

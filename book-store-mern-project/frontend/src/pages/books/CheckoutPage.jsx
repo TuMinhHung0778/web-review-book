@@ -56,7 +56,7 @@ const CheckoutPage = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div>Doi 1 xiu cho no Loading...😤😋😤😋😤😋</div>;
 
   return (
     <section>
