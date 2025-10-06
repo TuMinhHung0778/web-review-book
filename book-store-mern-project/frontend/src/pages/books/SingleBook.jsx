@@ -1,9 +1,8 @@
 import React from "react";
-
+import { FiShoppingCart } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 
 import { getImgUrl } from "../../utils/getImgUrl";
-import { FiShoppingCart } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
 import { useFetchBookByIdQuery } from "../../redux/features/books/booksApi";
@@ -20,9 +19,8 @@ const SingleBook = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error happending to load book info</div>;
-
   return (
-    <div className="max-w-lg shadow-sm p-5">
+    <div className="max-w-lg shadow-md p-5">
       <h1 className="text-2xl font-bold mb-6">{book.title}</h1>
 
       <div className="">
@@ -52,7 +50,7 @@ const SingleBook = () => {
 
         <button
           onClick={() => handleAddToCart(book)}
-          className="btn-primary px-6 space-x-1 flex items-center gap-1"
+          className="btn-primary px-6 space-x-1 flex items-center gap-1 "
         >
           <FiShoppingCart className="" />
           <span>Add to Cart</span>
@@ -61,4 +59,5 @@ const SingleBook = () => {
     </div>
   );
 };
+
 export default SingleBook;

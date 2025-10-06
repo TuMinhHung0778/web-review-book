@@ -9,10 +9,9 @@ const CartPage = () => {
   const dispatch = useDispatch();
 
   const totalPrice = cartItems
-    .reduce((acc, item) => acc + Number(item.newPrice || 0), 0)
+    .reduce((acc, item) => acc + item.newPrice, 0)
     .toFixed(2);
 
-  // hàm xóa sản phẩm khỏi giỏ hàng
   const handleRemoveFromCart = (product) => {
     dispatch(removeFromCart(product));
   };
@@ -20,7 +19,6 @@ const CartPage = () => {
   const handleClearCart = () => {
     dispatch(clearCart());
   };
-
   return (
     <>
       <div className="flex mt-12 h-full flex-col overflow-hidden bg-white shadow-xl">
@@ -63,7 +61,8 @@ const CartPage = () => {
                             <p className="sm:ml-4">${product?.newPrice}</p>
                           </div>
                           <p className="mt-1 text-sm text-gray-500 capitalize">
-                            <strong>Category: </strong> {product?.category}
+                            <strong>Category: </strong>
+                            {product?.category}
                           </p>
                         </div>
                         <div className="flex flex-1 flex-wrap items-end justify-between space-y-2 text-sm">
@@ -86,7 +85,7 @@ const CartPage = () => {
                   ))}
                 </ul>
               ) : (
-                <p>No product found</p>
+                <p>No product found!</p>
               )}
             </div>
           </div>
@@ -125,4 +124,5 @@ const CartPage = () => {
     </>
   );
 };
+
 export default CartPage;

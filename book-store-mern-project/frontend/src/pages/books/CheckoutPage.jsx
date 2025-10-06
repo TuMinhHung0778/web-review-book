@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { useCreateOrderMutation } from "../../redux/features/orders/ordersApi";
+
 import Swal from "sweetalert2";
+import { useCreateOrderMutation } from "../../redux/features/orders/ordersApi";
 
 const CheckoutPage = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = cartItems
-    .reduce((acc, item) => acc + Number(item.newPrice || 0), 0)
+    .reduce((acc, item) => acc + item.newPrice, 0)
     .toFixed(2);
   const { currentUser } = useAuth();
   const {
@@ -56,8 +57,7 @@ const CheckoutPage = () => {
     }
   };
 
-  if (isLoading) return <div>Doi 1 xiu cho no Loading...😤😋😤😋😤😋</div>;
-
+  if (isLoading) return <div>Loading....</div>;
   return (
     <section>
       <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center">
@@ -287,4 +287,5 @@ const CheckoutPage = () => {
     </section>
   );
 };
+
 export default CheckoutPage;
