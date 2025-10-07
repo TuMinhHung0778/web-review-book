@@ -32,7 +32,11 @@ const bookSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    review: {
+        type: String,
+        required: true,
+    },
 
 }, {
     timestamps: true

@@ -11,8 +11,6 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
   } = useForm();
 
   const onSubmit = async (data) => {
@@ -80,10 +78,19 @@ const Login = () => {
           )}
           <div>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded focus:outline-none">
-              Login
+              Login for users
             </button>
           </div>
         </form>
+        {/* Admin login redirect */}
+        <div className="mt-3">
+          <button
+            onClick={() => navigate('/admin')}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded focus:outline-none"
+          >
+            Login for admin
+          </button>
+        </div>
         <p className="align-baseline font-medium mt-4 text-sm">
           Haven't an account? Please{" "}
           <Link to="/register" className="text-blue-500 hover:text-blue-700">

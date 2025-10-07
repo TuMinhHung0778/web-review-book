@@ -9,9 +9,11 @@ import { useCreateOrderMutation } from "../../redux/features/orders/ordersApi";
 
 const CheckoutPage = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
+
   const totalPrice = cartItems
-    .reduce((acc, item) => acc + item.newPrice, 0)
+    .reduce((acc, item) => acc + Number(item?.newPrice || 0), 0)
     .toFixed(2);
+
   const { currentUser } = useAuth();
   const {
     register,

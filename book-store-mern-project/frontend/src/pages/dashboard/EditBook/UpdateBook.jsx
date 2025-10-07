@@ -3,10 +3,7 @@ import InputField from "../addBook/InputField";
 import SelectField from "../addBook/SelectField";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import {
-  useFetchBookByIdQuery,
-  useUpdateBookMutation,
-} from "../../../redux/features/books/booksApi";
+import { useFetchBookByIdQuery } from "../../../redux/features/books/booksApi";
 import Loading from "../../../components/Loading";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -21,8 +18,7 @@ const UpdateBook = () => {
     refetch,
   } = useFetchBookByIdQuery(id);
   // console.log(bookData)
-  const [updateBook] = useUpdateBookMutation();
-  const { register, handleSubmit, setValue, reset } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
   useEffect(() => {
     if (bookData) {
       setValue("title", bookData.title);
@@ -32,6 +28,7 @@ const UpdateBook = () => {
       setValue("oldPrice", bookData.oldPrice);
       setValue("newPrice", bookData.newPrice);
       setValue("coverImage", bookData.coverImage);
+      setValue("review", bookData.review);
     }
   }, [bookData, setValue]);
 
@@ -44,6 +41,7 @@ const UpdateBook = () => {
       oldPrice: Number(data.oldPrice),
       newPrice: Number(data.newPrice),
       coverImage: data.coverImage || bookData.coverImage,
+      review: data.review,
     };
     try {
       await axios.put(`${getBaseUrl()}/api/books/edit/${id}`, updateBookData, {
@@ -63,7 +61,7 @@ const UpdateBook = () => {
       });
       await refetch();
     } catch (error) {
-      console.log("Failed to update book.");
+      console.error("Failed to update book.", error);
       alert("Failed to update book.");
     }
   };
@@ -99,6 +97,7 @@ const UpdateBook = () => {
             { value: "fiction", label: "Fiction" },
             { value: "horror", label: "Horror" },
             { value: "adventure", label: "Adventure" },
+            { value: "books", label: "Books" },
           ]}
           register={register}
         />
@@ -136,6 +135,15 @@ const UpdateBook = () => {
           name="coverImage"
           type="text"
           placeholder="Cover Image URL"
+          register={register}
+        />
+
+        {/* Review Textarea */}
+        <InputField
+          label="Review"
+          name="review"
+          placeholder="Write or update review for this book"
+          type="textarea"
           register={register}
         />
 

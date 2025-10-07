@@ -1,6 +1,6 @@
 import React from "react";
 import footerLogo from "../assets/footer-logo.png";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaFacebook, FaGithub, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -23,7 +23,7 @@ const Footer = () => {
             </li>
             <li>
               <a href="#about" className="hover:text-primary">
-                About Us
+                About Me
               </a>
             </li>
             <li>
@@ -63,16 +63,13 @@ const Footer = () => {
 
         {/* Right Side - Social Icons */}
         <div className="flex gap-6">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+          <a href="https://www.facebook.com/mhioey.thio" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
             <FaFacebook size={24}/>
           </a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
-            <FaTwitter size={24}/>
+          <a href="https://github.com/TuMinhHung0778" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+            <FaGithub size={24}/>
           </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
-            <FaInstagram size={24}/>
-          </a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+          <a href="https://www.linkedin.com/in/t%E1%BB%AB-minh-h%C6%B0ng-85a865260/" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
             <FaLinkedin size={24}/>
           </a>
         </div>

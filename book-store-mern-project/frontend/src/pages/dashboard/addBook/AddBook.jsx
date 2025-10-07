@@ -1,24 +1,25 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
 import { useForm } from "react-hook-form";
 import { useAddBookMutation } from "../../../redux/features/books/booksApi";
 import Swal from "sweetalert2";
+import { getImgUrl } from "../../../utils/getImgUrl";
 
 const AddBook = () => {
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
+  	register,
+  	handleSubmit,
+  	reset,
   } = useForm();
-  const [imageFile, setimageFile] = useState(null);
-  const [addBook, { isLoading, isError }] = useAddBookMutation();
-  const [imageFileName, setimageFileName] = useState("");
+  const [addBook, { isLoading }] = useAddBookMutation();
+  const [selectedCover, setSelectedCover] = useState("book-1.png");
+  const [coverDataUrl, setCoverDataUrl] = useState("");
   const onSubmit = async (data) => {
     const newBookData = {
       ...data,
-      coverImage: imageFileName,
+      // prefer uploaded (compressed) dataURL; fallback to gallery image
+      coverImage: coverDataUrl || selectedCover,
     };
     try {
       await addBook(newBookData).unwrap();
@@ -32,20 +33,54 @@ const AddBook = () => {
         confirmButtonText: "Yes, It's Okay!",
       });
       reset();
-      setimageFileName("");
-      setimageFile(null);
     } catch (error) {
       console.error(error);
       alert("Failed to add book. Please try again.");
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setimageFile(file);
-      setimageFileName(file.name);
-    }
+  // Build gallery options 1..20 once
+  const galleryOptions = useMemo(
+    () => Array.from({ length: 20 }, (_, i) => `book-${i + 1}.png`),
+    []
+  );
+
+  // Handle file upload → crop to 3:4, resize, compress to keep payload small
+  const handleUpload = (file) => {
+    if (!file) return;
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = () => {
+      img.onload = () => {
+        // Compute crop region to 3:4 based on the shortest side
+        const targetRatio = 3 / 4; // width/height
+        let { width, height } = img;
+        let sx = 0, sy = 0, sWidth = width, sHeight = height;
+        const currentRatio = width / height;
+        if (currentRatio > targetRatio) {
+          // too wide → crop left/right
+          sWidth = height * targetRatio;
+          sx = (width - sWidth) / 2;
+        } else if (currentRatio < targetRatio) {
+          // too tall → crop top/bottom
+          sHeight = width / targetRatio;
+          sy = (height - sHeight) / 2;
+        }
+        // Resize to consistent display size, e.g., 384x512
+        const dw = 384; // width
+        const dh = 512; // height (3:4)
+        const canvas = document.createElement("canvas");
+        canvas.width = dw;
+        canvas.height = dh;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, dw, dh);
+        // Compress to JPEG quality ~0.8 to keep payload small (<~150KB)
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+        setCoverDataUrl(dataUrl);
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
   };
   return (
     <div className="max-w-lg   mx-auto md:p-6 p-3 bg-white rounded-lg shadow-md">
@@ -70,6 +105,15 @@ const AddBook = () => {
           register={register}
         />
 
+        {/* Review Textarea */}
+        <InputField
+          label="Review"
+          name="review"
+          placeholder="Write a short review/thoughts about the book"
+          type="textarea"
+          register={register}
+        />
+
         {/* Reusable Select Field for Category */}
         <SelectField
           label="Category"
@@ -81,6 +125,7 @@ const AddBook = () => {
             { value: "fiction", label: "Fiction" },
             { value: "horror", label: "Horror" },
             { value: "adventure", label: "Adventure" },
+            { value: "books", label: "Books" },
             // Add more options as needed
           ]}
           register={register}
@@ -118,20 +163,39 @@ const AddBook = () => {
           register={register}
         />
 
-        {/* Cover Image Upload */}
+        {/* Cover Image */}
         <div className="mb-4">
           <label className="block text-sm font-semibold text-gray-700 mb-2">
             Cover Image
           </label>
+          {/* Upload (auto crop to 3:4 + compress) */}
           <input
             type="file"
             accept="image/*"
-            onChange={handleFileChange}
-            className="mb-2 w-full"
+            onChange={(e) => handleUpload(e.target.files?.[0])}
+            className="mb-3 w-full"
           />
-          {imageFileName && (
-            <p className="text-sm text-gray-500">Selected: {imageFileName}</p>
-          )}
+          {/* Or choose from gallery */}
+          <div className="mb-2">
+            <span className="text-sm text-gray-500">or select from gallery</span>
+            <select
+              value={selectedCover}
+              onChange={(e) => setSelectedCover(e.target.value)}
+              className="w-full border rounded p-2 mt-1"
+            >
+              {galleryOptions.map((name) => (
+                <option key={name} value={name}>{name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="mt-3 flex items-center gap-3">
+            <img
+              src={coverDataUrl || `${getImgUrl(selectedCover)}`}
+              alt="Preview"
+              className="h-48 w-32 object-cover rounded border"
+            />
+            <p className="text-sm text-gray-500">Preview (auto 3:4)</p>
+          </div>
         </div>
 
         {/* Submit Button */}
