@@ -31,7 +31,7 @@ const Banner = () => {
           <br />
           Thank you for visiting! 🙏
           <br />
-          📱 Contact via Zalo: <strong>0898 124 614</strong>
+          📱 Contact My Zalo: <strong>0898 124 614</strong>
         </p>
 
         {/* Kỹ năng */}
